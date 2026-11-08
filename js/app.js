@@ -51,6 +51,6 @@ $("#modal").addEventListener("click", (e) => { if (e.target.id === "modal") clos
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") scan.stop(); });
 route();
 
-if ("serviceWorker" in navigator && location.protocol === "https:") {
+if ("serviceWorker" in navigator && globalThis.isSecureContext) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }

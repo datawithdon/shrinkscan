@@ -4,6 +4,7 @@
 // and a result must pass its check digit before it counts.
 
 import { normalize } from "./gtin.js";
+import { swControl } from "./sw-ready.js";
 
 const NATIVE_FORMATS = ["ean_13", "ean_8", "upc_a", "upc_e"];
 
@@ -27,7 +28,8 @@ function zxing() {
   return worker;
 }
 
-function decodeWithZxing(imageData) {
+async function decodeWithZxing(imageData) {
+  if (!worker) await swControl();
   return new Promise((resolve) => {
     const id = nextId++;
     pending.set(id, resolve);

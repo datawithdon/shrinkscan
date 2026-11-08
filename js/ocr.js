@@ -3,6 +3,7 @@
 // CDN), so the photo never leaves the phone.
 
 import Tesseract from "../vendor/tesseract/tesseract.esm.min.js";
+import { swControl } from "./sw-ready.js";
 
 const VENDOR = new URL("../vendor/tesseract/", import.meta.url).href;
 const OCR_WIDTH = 1400;
@@ -12,7 +13,7 @@ const onProgressRef = { fn: () => {} };
 
 function getWorker(onProgress) {
   if (!workerPromise) {
-    workerPromise = Tesseract.createWorker("eng", Tesseract.OEM.LSTM_ONLY, {
+    workerPromise = swControl().then(() => Tesseract.createWorker("eng", Tesseract.OEM.LSTM_ONLY, {
       workerPath: new URL("./tesseract-worker.js", import.meta.url).href,   // guard + vendor/tesseract/worker.min.js
       corePath: `${VENDOR}core/`,
       langPath: `${VENDOR}lang/`,
@@ -21,7 +22,7 @@ function getWorker(onProgress) {
       logger: (m) => {
         if (m && typeof m.progress === "number" && typeof m.status === "string") onProgressRef.fn(m);
       },
-    }).catch((e) => {
+    })).catch((e) => {
       workerPromise = null;
       throw e;
     });

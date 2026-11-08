@@ -36,16 +36,30 @@ lists what it does to protect users and how to report a problem.
   spreadsheet formulas.
 - Backups are size-capped (5 MB) and must identify as ShrinkScan backups.
 - Outbound links use `rel="noopener noreferrer"`.
-- The app refuses to run inside a frame, because GitHub Pages can't send
-  `X-Frame-Options` (clickjacking).
 - Requests to Open Food Facts are paced below its published rate limits and
   cached, so the app doesn't hammer a volunteer-run service.
-- **Workers are fenced in too.** A page's CSP doesn't reach Web Workers, and
-  GitHub Pages can't send a CSP header, so both workers load
-  `js/worker-guard.js` first. It only lets `fetch`, `importScripts` and XHR
-  reach this site, and disables WebSocket, EventSource and WebTransport. The
-  vendored libraries' default CDN URLs (jsDelivr) are always overridden, and
-  the guard makes sure a failed override can't load code from off-site.
+- **Security headers from the service worker.** GitHub Pages can't send
+  response headers, so `sw.js` adds them to what it serves:
+  - Pages get a real `Content-Security-Policy` (the same as the `<meta>` one,
+    plus `frame-ancestors 'none'`), `Permissions-Policy` (camera for this site
+    only; microphone, location, payment, USB and others off),
+    `Cross-Origin-Opener-Policy: same-origin`, `X-Frame-Options: DENY`,
+    `nosniff` and `no-referrer`.
+  - **Web Workers get their own CSP**
+    (`default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'`).
+    A page's CSP doesn't reach workers, so without this a worker could
+    `import()` or fetch code from any site. Workers wait (up to 4 s) for the
+    service worker to take control before starting.
+- **Worker guard as a second layer.** Both workers also load
+  `js/worker-guard.js` first. It limits `fetch`, `importScripts` and XHR to
+  this site and disables WebSocket, EventSource and WebTransport. It can't
+  intercept `import()`; the worker CSP above covers that. The guard matters
+  only when the service worker isn't running (very first moments of a visit
+  on a slow device, or private modes that disable service workers).
+- **Framing.** When another site frames the app, the browser isolates its
+  storage, so the service worker (and its `frame-ancestors` header) isn't
+  used there. The app then refuses to run and replaces itself with a notice
+  before anything can be clicked.
 - Third-party code is vendored at pinned versions (see `vendor/*/README.md`).
   Every file was compared byte-for-byte with the official npm packages
   (tesseract.js 7.0.0, tesseract.js-core 7.0.0, @tesseract.js-data/eng 1.0.0
