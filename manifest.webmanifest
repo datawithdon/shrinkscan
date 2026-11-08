@@ -1,0 +1,14 @@
+{
+  "name": "ShrinkScan: did it shrink?",
+  "short_name": "ShrinkScan",
+  "description": "Scan a grocery barcode to see whether the package got smaller, log shelf prices by photo, and find store-brand alternatives.",
+  "start_url": "./#/scan",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1c1410",
+  "theme_color": "#b45309",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

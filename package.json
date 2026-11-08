@@ -1,0 +1,12 @@
+{
+  "name": "shrinkscan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shrinkflation checker for Canadian groceries: scan a barcode, see whether the package got smaller (Open Food Facts edit history + same-brand size twins), log shelf prices by photo, and find store-brand alternatives. Static web app, no backend.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "python3 -m http.server 8000 --bind 127.0.0.1"
+  },
+  "license": "MIT"
+}
