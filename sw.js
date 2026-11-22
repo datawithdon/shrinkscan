@@ -8,9 +8,9 @@
 //  - Web Worker scripts get their own CSP. A page's CSP doesn't reach workers,
 //    so without this a worker could import() or fetch code from anywhere.
 
-const CACHE = "shrinkscan-v3";
+const CACHE = "shrinkscan-v4";
 
-const DOC_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https://world.openfoodfacts.org; font-src 'self'; worker-src 'self'; media-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; frame-ancestors 'none'";
+const DOC_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https://world.openfoodfacts.org; font-src 'self'; worker-src 'self'; media-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types default";
 // Workers: own-origin scripts and data only. 'wasm-unsafe-eval' lets them
 // compile the vendored WebAssembly (OCR and barcode decoders); nothing else.
 const WORKER_CSP = "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; worker-src 'none'; base-uri 'none'";
@@ -33,7 +33,7 @@ function secure(res, request) {
 }
 const SHELL = [
   "./", "index.html", "manifest.webmanifest",
-  "css/styles.css", "icons/icon.svg", "js/app.js", "js/barcode-worker.js", "js/barcode.js", "js/sw-ready.js", "js/worker-guard.js", "js/tesseract-worker.js", "js/dom.js", "js/gtin.js", "js/history.js", "js/ocr.js", "js/off.js", "js/shelf.js", "js/siblings.js", "js/store.js", "js/ui.js", "js/units.js", "js/verdict.js", "js/views/logprice.js", "js/views/prices.js", "js/views/product.js", "js/views/scan.js", "js/views/settings.js", "js/views/shrunk.js",
+  "css/styles.css", "icons/icon.svg", "js/app.js", "js/tt.js", "js/barcode-worker.js", "js/barcode.js", "js/sw-ready.js", "js/worker-guard.js", "js/tesseract-worker.js", "js/dom.js", "js/gtin.js", "js/history.js", "js/ocr.js", "js/off.js", "js/shelf.js", "js/siblings.js", "js/store.js", "js/ui.js", "js/units.js", "js/verdict.js", "js/views/logprice.js", "js/views/prices.js", "js/views/product.js", "js/views/scan.js", "js/views/settings.js", "js/views/shrunk.js",
   "vendor/tesseract/tesseract.esm.min.js", "vendor/tesseract/worker.min.js",
   "vendor/zxing/es/reader/index.js", "vendor/zxing/es/share.js", "vendor/zxing/reader/zxing_reader.wasm",
 ];

@@ -1,5 +1,6 @@
 // Entry point: hash router, shrunk-list badge, service worker.
 
+import "./tt.js"; // first: Trusted Types policy
 import { $, $$ } from "./dom.js";
 import { load, onChange, state } from "./store.js";
 import { closeModal } from "./ui.js";
